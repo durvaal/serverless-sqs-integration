@@ -1,0 +1,23 @@
+{
+  "name": "serverless-sqs-consumer",
+  "version": "0.0.1",
+  "description": "Study and implementation of an SQS queue integrated into an AWS Lambda using the Serverless Framework.",
+  "private": true,
+  "scripts": {
+    "start": "npx serverless offline start --httpPort 4200 --stage local --printOutput",
+    "send-message": "npx serverless invoke local --function sender",
+    "config": "npx serverless config",
+    "deploy": "npx serverless deploy",
+    "undeploy": "npx serverless remove"
+  },
+  "author": "Paulo Lima",
+  "license": "MIT",
+  "devDependencies": {
+    "aws-sdk": "^2.1148.0",
+    "serverless": "^3.19.0",
+    "serverless-lift": "^1.18.0",
+    "serverless-offline": "^8.8.0",
+    "serverless-webpack": "^5.7.1",
+    "webpack-node-externals": "^3.0.0"
+  }
+}

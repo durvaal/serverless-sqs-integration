@@ -1,0 +1,46 @@
+service: serverless-sqs-integration
+
+provider:
+  name: aws
+  profile: ${opt:profile, 'paulo'}
+  runtime: nodejs14.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+
+  environment:
+    NODE_ENV: ${opt:stage, 'dev'}
+
+package:
+  individually: true
+
+constructs:
+  receiver:
+    type: queue
+    # maxBatchingWindow: 10 # SQS will wait 5 seconds
+    # batchSize: 5 # Lambda will receive 5 messages at a time. Default 1
+    worker:
+      handler: handler.receiver
+      alarm: plimayep@gmail.com
+      # Scale to maximum 10 worker instances
+      reservedConcurrency: 10
+    extensions:
+      queue:
+        Properties:
+          # MaximumMessageSize: 512 # Default 1024
+          ReceiveMessageWaitTimeSeconds: 10 # Default 0
+
+functions:
+  sender:
+    handler: handler.sender
+    environment:
+      QUEUE_URL: ${construct:receiver.queueUrl}
+
+plugins:
+  - serverless-offline
+  - serverless-lift
+  - serverless-webpack
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
